@@ -1,6 +1,7 @@
 🏠 EcoSmart Home Infrastructure
 
 🚀 Overview
+
 This repository contains the full cloud infrastructure setup for a Smart Home Management System. The project uses Docker Containerization to orchestrate multiple services, ensuring a scalable and isolated environment for home automation data and user interfaces.
 
 🏗️ Architecture & Services
