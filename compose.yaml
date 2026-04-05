@@ -1,0 +1,59 @@
+services:
+  # -----------------------------
+  # 1. User Interface (Appsmith)
+  # -----------------------------
+  appsmith:
+    image: appsmith/appsmith-ce
+    container_name: eco-appsmith
+    ports:
+      - "80:80"
+    volumes:
+      - ./appsmith_stacks:/appsmith-stacks
+    restart: unless-stopped
+
+  # -----------------------------
+  # 2. Database (PostgreSQL)
+  # -----------------------------
+  db_postgres:
+    image: postgres:15
+    container_name: eco-db       # <--- Σωστό (με παύλα)
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: adminpass
+      POSTGRES_DB: ecohome_db    # <--- Το αφήνουμε με _ για να μη χάσουμε τους πίνακες
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # -----------------------------
+  # 3. Database Admin (Adminer)
+  # -----------------------------
+  db_admin:
+    image: adminer
+    container_name: eco-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db_postgres
+
+  # -----------------------------
+  # 4. Mock API: Users (Έτοιμο Image)
+  # -----------------------------
+  api_users:
+    image: svenwal/jsonplaceholder
+    container_name: eco-api-users # <--- Σωστό (με παύλα)
+    ports:
+      - "3001:3000"
+
+  # -----------------------------
+  # 5. Mock API: Devices (Το δικό μας)
+  # -----------------------------
+  api_devices:
+    build: ./api_data
+    container_name: eco-api-devices # <--- ΔΙΟΡΘΩΣΗ: Εδώ είχες _
+    ports:
+      - "3002:3000"
+
+volumes:
+  postgres_data:
